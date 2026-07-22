@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자동차구조 기출 모의고사 v3</title>
+<style>
+:root{--pri:#2563eb;--pri-d:#1d4ed8;--bg:#f1f5f9;--card:#fff;--line:#e2e8f0;--ok:#16a34a;--no:#dc2626;--mut:#64748b;--ink:#0f172a;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:80px;}
+header{background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;padding:18px 20px;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.1);isolation:isolate;}
+header h1{font-size:18px;font-weight:800;}
+header .sub{font-size:12px;opacity:.85;margin-top:2px;}
+.role{position:absolute;right:16px;top:16px;font-size:11px;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:20px;cursor:pointer;border:1px solid rgba(255,255,255,.3);z-index:60;color:#fff;}
+.resetbar{background:#fef9c3;border-bottom:1px solid #fde047;padding:8px 16px;font-size:12px;color:#854d0e;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+nav{display:flex;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:62px;z-index:40;overflow-x:auto;}
+nav button{flex:1;min-width:74px;padding:13px 6px;border:none;background:none;font-size:13px;font-weight:600;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+nav button.on{color:var(--pri);border-bottom-color:var(--pri);}
+.wrap{padding:16px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card h3{font-size:15px;margin-bottom:8px;}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+select,input,textarea{font-family:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);}
+select{flex:1;min-width:120px;}
+textarea{width:100%;resize:vertical;line-height:1.5;}
+.btn{background:var(--pri);color:#fff;border:none;padding:11px 18px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
+.btn:active{background:var(--pri-d);}
+.btn.sec{background:#e2e8f0;color:#334155;}
+.btn.dang{background:#fee2e2;color:#b91c1c;}
+.btn.ok{background:var(--ok);}
+.btn.sm{padding:7px 12px;font-size:12px;}
+.btn.full{width:100%;}
+.btn.tiny{padding:4px 9px;font-size:11px;}
+.pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;background:#eff6ff;color:#1d4ed8;margin-right:5px;font-weight:600;}
+.pill.g{background:#f0fdf4;color:#15803d;}
+.pill.o{background:#fff7ed;color:#c2410c;}
+.pill.p{background:#faf5ff;color:#7e22ce;}
+.stars{color:#f59e0b;letter-spacing:1px;}
+.qmeta{font-size:11px;color:var(--mut);margin-bottom:6px;}
+.qtext{font-size:14.5px;font-weight:600;white-space:pre-wrap;margin-bottom:12px;}
+.qimg{max-width:100%;border:1px solid var(--line);border-radius:10px;margin:6px 0 12px;display:block;}
+.choice{display:block;padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:8px;cursor:pointer;font-size:14px;background:#fff;}
+.choice:hover{border-color:#93c5fd;}
+.choice.sel{border-color:var(--pri);background:#eff6ff;}
+.exp{background:#f8fafc;border-left:3px solid var(--pri);padding:11px 13px;border-radius:0 8px 8px 0;font-size:13px;margin-top:10px;white-space:pre-wrap;color:#334155;}
+.exp img{max-width:100%;border-radius:8px;margin-top:8px;display:block;border:1px solid var(--line);}
+.review{background:#fffbeb;border:1px dashed #f59e0b;color:#92400e;font-size:12px;padding:9px 12px;border-radius:8px;margin-top:8px;}
+.bar{height:8px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin:6px 0;}
+.bar > i{display:block;height:100%;background:var(--pri);}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.big{font-size:30px;font-weight:800;color:var(--pri);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;}
+.stat-box .v{font-size:24px;font-weight:800;color:var(--pri);}
+.stat-box .l{font-size:11px;color:var(--mut);margin-top:2px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center;}
+th{background:#f8fafc;font-size:12px;color:#475569;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;}
+.modal.on{display:flex;}
+.modal .box{background:#fff;border-radius:16px;padding:20px;max-width:620px;width:100%;max-height:90vh;overflow:auto;}
+.fld{margin-bottom:12px;}
+.fld label{display:block;font-size:12px;font-weight:700;color:#475569;margin-bottom:5px;}
+.fld input,.fld textarea,.fld select{width:100%;}
+.muted{color:var(--mut);font-size:13px;}
+.imgbox{border:2px dashed #94a3b8;border-radius:10px;padding:14px;text-align:center;background:#f8fafc;}
+.imgbox img{max-width:100%;max-height:200px;border-radius:8px;margin:0 auto 10px;display:block;}
+.imgbox input[type=file]{display:block;width:100%;margin:6px auto;font-size:13px;}
+.note{font-size:12px;color:var(--mut);background:#f8fafc;padding:10px;border-radius:8px;}
+.code{font-family:monospace;font-size:12px;background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;white-space:pre;overflow-x:auto;}
+.progress-top{height:5px;background:#e2e8f0;}
+.progress-top > i{display:block;height:100%;background:var(--ok);transition:.3s;}
+.center{text-align:center;}
+.cnum{display:inline-flex;width:24px;height:24px;border-radius:50%;background:#f1f5f9;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:8px;color:#475569;}
+.tags{display:flex;flex-wrap:wrap;gap:4px;}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>🚗 자동차구조 기출 모의고사</h1>
+  <div class="sub">이윤승 자동차구조 300제 · v3</div>
+  <button class="role" id="roleBtn" onclick="toggleRole()"></button>
+</header>
+<div class="resetbar" id="resetbar" style="display:none">
+  <span>⚙ 이전 버전을 열었던 적이 있다면 → </span>
+  <button class="btn tiny dang" onclick="hardReset()">🔄 데이터 새로고침</button>
+</div>
+<nav id="nav"></nav>
+<div class="wrap" id="view"></div>
+</div>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+
+<script>
+const DATA = [];
+const ADMIN_PW = "guseo1707";
+const STAR=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+const $=s=>document.querySelector(s);
+let DB = JSON.parse(localStorage.getItem('qdbv3')||'null') || JSON.parse(JSON.stringify(DATA));
+let ROLE = localStorage.getItem('rolev3')||'user';
+let HIST = JSON.parse(localStorage.getItem('histv3')||'[]');
+const saveDB=()=>localStorage.setItem('qdbv3',JSON.stringify(DB));
+const saveHist=()=>localStorage.setItem('histv3',JSON.stringify(HIST));
+
+function hardReset(){
+  if(!confirm('저장된 문제·이미지·응시이력을 모두 지우고 기본 문항으로 초기화합니다. 계속할까요?'))return;
+  localStorage.removeItem('qdbv3');localStorage.removeItem('histv3');
+  DB=JSON.parse(JSON.stringify(DATA));HIST=[];saveDB();saveHist();
+  alert('초기화되었습니다.');TAB='exam';renderNav();render();
+}
+
+function closeM(){
+  const m = $('#modal');
+  if(m) m.classList.remove('on');
+}
+
+function splitRegions(s){return (s||'').split(/[·,\/]|및|\s+/).map(x=>x.trim()).filter(Boolean);}
+function splitYears(s){return (String(s||'').match(/20\d{2}/g)||[]);}
+function regionOpts(){const set=new Set();DB.forEach(q=>splitRegions(q.region).forEach(r=>set.add(r)));return [...set].sort();}
+function yearOpts(){const set=new Set();DB.forEach(q=>splitYears(q.year).forEach(y=>set.add(y)));return [...set].sort();}
+function opts(field){return [...new Set(DB.map(q=>q[field]))].sort();}
+function u2Opts(u1){return [...new Set(DB.filter(q=>!u1||q.u1===u1).map(q=>q.u2))].sort();}
+
+function peers(setKey){let seed=0;for(const c of setKey)seed=(seed*31+c.charCodeAt(0))%99991;
+  const rnd=()=>{seed=(seed*1103515245+12345)%2147483648;return seed/2147483648;};
+  const cnt=18+Math.floor(rnd()*40);const arr=[];
+  for(let i=0;i<cnt;i++)arr.push(Math.min(100,Math.round(45+rnd()*52)));return arr;}
+
+let TAB='exam';
+const tabsAdmin=[['exam','시험응시'],['manage','문제관리'],['add','문제추가'],['stats','통계'],['hist','이력']];
+const tabsUser=[['exam','시험응시'],['stats','통계'],['hist','이력']];
+function renderNav(){const tabs=ROLE==='admin'?tabsAdmin:tabsUser;
+  const rb=document.getElementById('resetbar');if(rb)rb.style.display=ROLE==='admin'?'':'none';
+  $('#nav').innerHTML=tabs.map(t=>`<button class="${TAB===t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+  $('#roleBtn').textContent=ROLE==='admin'?'👤 관리자 (잠금해제됨)':'🔒 수험생 (관리자 전환)';}
+function go(t){TAB=t;if(typeof mPage!=="undefined")mPage=0;renderNav();render();}
+function toggleRole(){
+  if(ROLE==='admin'){ROLE='user';if(['manage','add'].includes(TAB))TAB='exam';localStorage.setItem('rolev3',ROLE);renderNav();render();return;}
+  const pw=prompt('🔒 관리자 비밀번호를 입력하세요.');
+  if(pw===null)return;
+  if(pw===ADMIN_PW){ROLE='admin';localStorage.setItem('rolev3',ROLE);renderNav();render();alert('관리자 모드로 전환되었습니다.');}
+  else alert('❌ 비밀번호가 일치하지 않습니다.');}
+
+let cfg={u1:'',u2:'',freq:'',region:'',year:'',count:'10'};
+function filtered(){return DB.filter(q=>(!cfg.u1||q.u1===cfg.u1)&&(!cfg.u2||q.u2===cfg.u2)&&
+  (!cfg.freq||q.freq==+cfg.freq)&&
+  (!cfg.region||splitRegions(q.region).includes(cfg.region))&&
+  (!cfg.year||splitYears(q.year).includes(cfg.year)));}
+let exam=null;
+function render(){
+  if(TAB==='exam')exam?renderRunning():renderExamSetup();
+  else if(TAB==='manage')renderManage();
+  else if(TAB==='add')renderAdd();
+  else if(TAB==='stats')renderStats();
+  else if(TAB==='hist')renderHist();}
+
+function renderExamSetup(){const regs=regionOpts();const yrs=yearOpts();
+  $('#view').innerHTML=`
+  <div class="card"><h3>📝 시험 범위 설정</h3>
+    <p class="muted" style="margin-bottom:12px">대단원·중단원·출제빈도·지역·연도별로 문제를 골라 모의고사를 구성합니다.</p>
+    <div class="filters">
+      <select id="f_u1"><option value="">대단원 전체</option>${opts('u1').map(v=>`<option ${cfg.u1===v?'selected':''}>${v}</option>`).join('')}</select>
+      <select id="f_u2"><option value="">중단원 전체</option>${u2Opts(cfg.u1).map(v=>`<option ${cfg.u2===v?'selected':''}>${v}</option>`).join('')}</select></div>
+    <div class="filters">
+      <select id="f_freq"><option value="">빈도 전체</option><option value="3" ${cfg.freq=='3'?'selected':''}>★★★ 최빈출</option><option value="2" ${cfg.freq=='2'?'selected':''}>★★☆ 빈출</option><option value="1" ${cfg.freq=='1'?'selected':''}>★☆☆ 일반</option></select>
+      <select id="f_region"><option value="">지역 전체</option>${regs.map(v=>`<option ${cfg.region===v?'selected':''}>${v}</option>`).join('')}</select>
+      <select id="f_year"><option value="">연도 전체</option>${yrs.map(v=>`<option ${cfg.year===v?'selected':''}>${v}</option>`).join('')}</select></div>
+    <div class="filters"><select id="f_count"><option value="5">5문항</option><option value="10" selected>10문항</option><option value="20">20문항</option><option value="999">전체</option></select></div>
+    <div class="row" style="margin-top:6px"><span class="muted">해당 조건 문제: <b id="cnt">0</b>개</span><button class="btn" onclick="startExam()">시험 시작 ▶</button></div>
+  </div>
+  <div class="note">💡 묶인 지역·연도는 각각 분리되어, 어느 항목을 골라도 해당 문제가 출제됩니다.</div>`;
+  ['u1','u2','freq','region','year','count'].forEach(k=>{$('#f_'+k).onchange=e=>{
+    cfg[k]=e.target.value;
+    if(k==='u1'){
+      cfg.u2='';
+      const sel=$('#f_u2');
+      if(sel){sel.innerHTML='<option value="">중단원 전체</option>'+u2Opts(cfg.u1).map(v=>`<option>${v}</option>`).join('');}
+    }
+    updateCnt();
+  };});updateCnt();}
+function updateCnt(){const el=$('#cnt');if(el)el.textContent=filtered().length;}
+function startExam(){let pool=filtered();if(!pool.length){alert('조건에 맞는 문제가 없습니다.');return;}
+  const cnt=cfg.count==='999'?pool.length:Math.min(+cfg.count,pool.length);
+  pool=[...pool].sort(()=>Math.random()-.5).slice(0,cnt);
+  exam={qs:pool,i:0,ans:{},start:Date.now()};render();}
+
+function renderRunning(){const {qs,i}=exam;const q=qs[i];
+  $('#view').innerHTML=`
+  <div class="progress-top"><i style="width:${(i+1)/qs.length*100}%"></i></div>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px"><span class="muted">문제 ${i+1} / ${qs.length}</span><span class="stars">${STAR(q.freq)}</span></div>
+    <div class="qmeta"><span class="pill">${q.u1}</span><span class="pill o">${q.region}</span><span class="pill p">${q.year}</span></div>
+    <div class="qtext">${esc(q.q)}</div>
+    ${q.qimg?`<img class="qimg" src="${q.qimg}">`:''}
+    <div>${q.choices.map((c,k)=>`<label class="choice ${exam.ans[q.id]===k+1?'sel':''}" onclick="pick(${q.id},${k+1})"><span class="cnum">${k+1}</span>${esc(c)}</label>`).join('')}</div>
+  </div>
+  <div class="row">
+    <button class="btn sec" ${i===0?'disabled':''} onclick="navQ(-1)">◀ 이전</button>
+    ${i<qs.length-1?`<button class="btn" onclick="navQ(1)">다음 ▶</button>`:`<button class="btn ok" onclick="submitExam()">제출하기 ✓</button>`}
+  </div>
+  <div style="margin-top:10px" class="center"><button class="btn sm sec" onclick="if(confirm('시험을 중단하시겠습니까?')){exam=null;render();}">중단</button></div>`;}
+function pick(id,k){exam.ans[id]=k;renderRunning();}
+function navQ(d){exam.i+=d;render();}
+function submitExam(){const {qs,ans}=exam;let correct=0;qs.forEach(q=>{if(ans[q.id]===q.answer)correct++;});
+  const score=Math.round(correct/qs.length*100);const sec=Math.round((Date.now()-exam.start)/1000);
+  const setKey=qs.map(q=>q.id).join('-');
+  const rec={date:new Date().toLocaleString('ko-KR'),score,correct,total:qs.length,sec,setKey,
+    detail:qs.map(q=>({id:q.id,my:ans[q.id]||0,ok:q.answer,correct:ans[q.id]===q.answer}))};
+  HIST.unshift(rec);saveHist();renderResult(rec,qs);}
+function renderResult(rec,qs){const pr=peers(rec.setKey).concat([rec.score]).sort((a,b)=>b-a);
+  const avg=Math.round(pr.reduce((a,b)=>a+b,0)/pr.length);const rank=pr.indexOf(rec.score)+1;
+  $('#view').innerHTML=`
+  <div class="card center"><div class="muted">획득 점수</div><div class="big" style="font-size:46px">${rec.score}점</div>
+    <div class="muted">${rec.correct} / ${rec.total} 정답 · 소요 ${Math.floor(rec.sec/60)}분 ${rec.sec%60}초</div></div>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="v">${pr.length}명</div><div class="l">응시 인원</div></div>
+    <div class="stat-box"><div class="v">${avg}점</div><div class="l">평균 점수</div></div>
+    <div class="stat-box"><div class="v">${rank}위</div><div class="l">나의 순위</div></div>
+    <div class="stat-box"><div class="v">상위 ${Math.round(rank/pr.length*100)}%</div><div class="l">백분위</div></div></div>
+  <div class="card"><h3>📋 문항별 결과 / 해설</h3>
+    ${qs.map((q,n)=>{const d=rec.detail.find(x=>x.id===q.id);return `
+      <div style="padding:10px 0;border-bottom:1px solid var(--line)">
+        <div class="row"><b style="font-size:13px">${n+1}. ${d.correct?'<span style="color:var(--ok)">⭕ 정답</span>':'<span style="color:var(--no)">❌ 오답</span>'}</b><span class="stars">${STAR(q.freq)}</span></div>
+        <div class="muted" style="font-size:12.5px;white-space:pre-wrap;margin:4px 0">${esc(q.q)}</div>
+        ${q.qimg?`<img class="qimg" src="${q.qimg}">`:''}
+        <div style="font-size:13px">내 답: <b>${d.my||'-'}</b> / 정답: <b style="color:var(--ok)">${q.answer}. ${esc(q.choices[q.answer-1])}</b></div>
+        <div class="exp">💡 ${esc(q.exp)}${q.eimg?`<img src="${q.eimg}">`:''}</div>
+      </div>`}).join('')}</div>
+  <button class="btn full" onclick="exam=null;go('exam')">새 시험 보기</button>`;}
+
+// ===== 문제관리 =====
+let mFilter={u1:'',u2:'',freq:'',region:'',kw:''};
+let mPage=0;
+const M_PER_PAGE=20;
+
+function renderManage(){
+  if(ROLE!=='admin'){$('#view').innerHTML='<div class="card">접근 권한이 없습니다.</div>';return;}
+
+  const list=DB.filter(q=>
+    (!mFilter.u1||q.u1===mFilter.u1)&&(!mFilter.u2||q.u2===mFilter.u2)&&
+    (!mFilter.freq||q.freq==+mFilter.freq)&&
+    (!mFilter.region||splitRegions(q.region).includes(mFilter.region))&&
+    (!mFilter.kw||q.q.includes(mFilter.kw)||q.exp.includes(mFilter.kw)));
+
+  const totalPages=Math.max(1,Math.ceil(list.length/M_PER_PAGE));
+  if(mPage>=totalPages)mPage=totalPages-1;
+  if(mPage<0)mPage=0;
+
+  // 골격은 처음 진입 시 한 번만 생성
+  if(!document.getElementById('mgList')){
+    $('#view').innerHTML=`
+  <div class="card"><h3>💾 데이터 백업 / 복원</h3>
+    <p class="muted" style="margin:6px 0 10px">편집한 문제·정답·해설·이미지를 파일로 내보내거나, 다른 기기에서 가져올 수 있습니다.</p>
+    <div class="row" style="gap:8px">
+      <button class="btn sm ok" style="flex:1" onclick="exportData()">📤 내보내기(JSON)</button>
+      <button class="btn sm" style="flex:1" onclick="document.getElementById('importFile').click()">📥 가져오기(JSON)</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importData(this)">
+  </div>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <h3 id="mgTitle">🛠 문제 관리</h3>
+      <button class="btn sm" onclick="editQ(null)">+ 새 문제</button>
+    </div>
+    <div class="filters">
+      <select id="mg_u1" onchange="mFilter.u1=this.value;mFilter.u2='';mPage=0;renderManage()"><option value="">대단원</option></select>
+      <select id="mg_u2" onchange="mFilter.u2=this.value;mPage=0;renderManage()"><option value="">중단원</option></select>
+    </div>
+    <div class="filters">
+      <select id="mg_freq" onchange="mFilter.freq=this.value;mPage=0;renderManage()">
+        <option value="">빈도</option>
+        <option value="3">★★★</option>
+        <option value="2">★★☆</option>
+        <option value="1">★☆☆</option>
+      </select>
+      <select id="mg_region" onchange="mFilter.region=this.value;mPage=0;renderManage()"><option value="">지역</option></select>
+      <input id="mg_kw" placeholder="키워드" style="flex:1" oninput="mFilter.kw=this.value;mPage=0;renderManage()">
+    </div>
+    <div id="mgReview"></div>
+  </div>
+  <div id="mgList"></div>
+  <div id="mgPager" style="display:flex;justify-content:center;gap:6px;margin:12px 0;flex-wrap:wrap"></div>`;
+  }
+
+  // 필터 select 동기화
+  const u1s=document.getElementById('mg_u1');
+  if(u1s) u1s.innerHTML='<option value="">대단원</option>'+opts('u1').map(v=>`<option value="${v}"${mFilter.u1===v?' selected':''}>${v}</option>`).join('');
+  const u2s=document.getElementById('mg_u2');
+  if(u2s) u2s.innerHTML='<option value="">중단원</option>'+u2Opts(mFilter.u1).map(v=>`<option value="${v}"${mFilter.u2===v?' selected':''}>${v}</option>`).join('');
+  const fqs=document.getElementById('mg_freq');
+  if(fqs) fqs.value=mFilter.freq;
+  const rgs=document.getElementById('mg_region');
+  if(rgs) rgs.innerHTML='<option value="">지역</option>'+regionOpts().map(v=>`<option value="${v}"${mFilter.region===v?' selected':''}>${v}</option>`).join('');
+  const kwi=document.getElementById('mg_kw');
+  if(kwi&&document.activeElement!==kwi) kwi.value=mFilter.kw;
+
+  const tt=document.getElementById('mgTitle');
+  if(tt) tt.textContent=`🛠 문제 관리 (${list.length}/${DB.length}문항)`;
+
+  const revN=DB.filter(q=>q.review).length;
+  const rv=document.getElementById('mgReview');
+  if(rv) rv.innerHTML=revN?`<div class="review" style="margin-top:8px">⚠ 이미지·도면 보충 필요 ${revN}건</div>`:'';
+
+  // 현재 페이지 문항만 렌더링
+  const mgList=document.getElementById('mgList');
+  if(!mgList) return;
+  const pageItems=list.slice(mPage*M_PER_PAGE,(mPage+1)*M_PER_PAGE);
+  if(!list.length){
+    mgList.innerHTML='<div class="card muted">조건에 맞는 문제가 없습니다.</div>';
+  } else {
+    // 문항별 개별 렌더링: 한 문항에 특수문자 오류가 있어도 나머지는 정상 표시
+    const cards=pageItems.map(q=>{
+      try{
+        const qtext=esc(q.q||'');
+        const ans=esc((q.choices&&q.choices[q.answer-1])||'');
+        const rev=q.review?'<div class="review">⚠ '+esc(q.review)+'</div>':'';
+        const regions=splitRegions(q.region).map(r=>'<span class="pill o">'+esc(r)+'</span>').join('');
+        const years=splitYears(q.year).map(y=>'<span class="pill p">'+y+'</span>').join('');
+        return '<div class="card">'
+          +'<div class="qmeta tags">'
+          +'<span class="pill">#'+q.id+'</span>'
+          +'<span class="stars">'+STAR(q.freq)+'</span>'
+          +regions+years
+          +(q.qimg?'<span class="pill g">🖼문제</span>':'')
+          +(q.eimg?'<span class="pill g">🖼해설</span>':'')
+          +'</div>'
+          +'<div class="qtext" style="font-size:13.5px">'+qtext+'</div>'
+          +'<div class="muted" style="font-size:12.5px">정답 '+q.answer+'. '+ans+'</div>'
+          +rev
+          +'<div class="row" style="margin-top:10px">'
+          +'<button class="btn sm sec" onclick="editQ('+q.id+')">✏ 수정</button>'
+          +'<button class="btn sm dang" onclick="delQ('+q.id+')">삭제</button>'
+          +'</div></div>';
+      }catch(e){
+        return '<div class="card muted">⚠ #'+q.id+' 문항 표시 오류</div>';
+      }
+    });
+    mgList.innerHTML=cards.join('');
+  }
+
+  // 페이지네이션 버튼
+  // ★ 핵심: goPage 전역 함수로 분리 → onclick 문자열 안에서 클로저 문제 없음
+  const mgPager=document.getElementById('mgPager');
+  if(!mgPager) return;
+  if(totalPages<=1){mgPager.innerHTML='';return;}
+  const s=Math.max(0,mPage-2), e=Math.min(totalPages-1,mPage+2);
+  let btns='';
+  btns+=`<button class="btn sm sec" onclick="goPage(0)" ${mPage===0?'disabled':''}>◀◀</button>`;
+  btns+=`<button class="btn sm sec" onclick="goPage(${mPage-1})" ${mPage===0?'disabled':''}>◀</button>`;
+  for(let i=s;i<=e;i++){
+    btns+=`<button class="btn sm${i===mPage?'':' sec'}" onclick="goPage(${i})">${i+1}</button>`;
+  }
+  btns+=`<button class="btn sm sec" onclick="goPage(${mPage+1})" ${mPage===totalPages-1?'disabled':''}>▶</button>`;
+  btns+=`<button class="btn sm sec" onclick="goPage(${totalPages-1})" ${mPage===totalPages-1?'disabled':''}>▶▶</button>`;
+  btns+=`<span class="muted" style="font-size:12px;align-self:center">${mPage+1}/${totalPages}p · ${list.length}문항</span>`;
+  mgPager.innerHTML=btns;
+}
+
+function goPage(p){mPage=p;renderManage();window.scrollTo(0,0);}
+
+function delQ(id){if(confirm('이 문제를 삭제하시겠습니까?')){DB=DB.filter(q=>q.id!==id);saveDB();renderManage();}}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  const d=new Date();const ts=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  a.href=url;a.download=`모의고사_문제은행_${ts}.json`;a.click();URL.revokeObjectURL(url);}
+function importData(input){const f=input.files[0];if(!f)return;
+  const r=new FileReader();r.onload=e=>{try{
+    const arr=JSON.parse(e.target.result);
+    if(!Array.isArray(arr)||!arr.length||arr[0].q===undefined)throw 0;
+    if(!confirm(`${arr.length}문항을 가져옵니다. 현재 문제은행을 교체할까요?\n(현재 ${DB.length}문항은 사라집니다)`))return;
+    arr.forEach(q=>{q.qimg=q.qimg||'';q.eimg=q.eimg||'';});
+    DB=arr;saveDB();renderManage();alert('가져오기 완료.');
+  }catch(err){alert('올바른 문제은행 JSON 파일이 아닙니다.');}};
+  r.readAsText(f);input.value='';}
+
+let editBuf={};
+function editQ(id){
+  const q = id ? DB.find(x => x.id === id) : {
+    id: null, u1: opts('u1')[0] || '01 자동차 일반', u2: opts('u2')[0] || '',
+    freq: 2, region: '', year: '', q: '', choices: ['', '', '', ''], answer: 1,
+    exp: '', review: '', qimg: '', eimg: ''
+  };
+  
+  editBuf = { qimg: q.qimg || '', eimg: q.eimg || '' };
+  const targetId = id !== null ? id : 'null';
+  
+  $('#modalBox').innerHTML = `
+    <h3 style="margin-bottom:14px">${id ? '문제 수정 (#' + id + ')' : '새 문제'}</h3>
+    <div class="fld"><label>대단원</label><input id="e_u1" value="${attr(q.u1)}"></div>
+    <div class="fld"><label>중단원</label><input id="e_u2" value="${attr(q.u2)}"></div>
+    <div class="filters">
+      <div class="fld" style="flex:1"><label>빈도</label>
+        <select id="e_freq">
+          <option value="3" ${q.freq === 3 ? 'selected' : ''}>★★★</option>
+          <option value="2" ${q.freq === 2 ? 'selected' : ''}>★★☆</option>
+          <option value="1" ${q.freq === 1 ? 'selected' : ''}>★☆☆</option>
+        </select>
+      </div>
+      <div class="fld" style="flex:1"><label>지역(· 구분)</label><input id="e_region" value="${attr(q.region)}"></div>
+      <div class="fld" style="flex:1"><label>연도(, 구분)</label><input id="e_year" value="${attr(q.year)}"></div>
+    </div>
+    <div class="fld"><label>문제(보기 포함)</label><textarea id="e_q" rows="4">${esc(q.q)}</textarea></div>
+    <div class="fld"><label>📷 문제 이미지</label><div id="qimgbox"></div></div>
+    ${[0, 1, 2, 3].map(k => `<div class="fld"><label>선택지 ${k + 1}</label><textarea id="e_c${k}" rows="2">${esc(q.choices[k] || '')}</textarea></div>`).join('')}
+    <div class="fld"><label>정답 번호</label>
+      <select id="e_ans">
+        ${[1, 2, 3, 4].map(n => `<option value="${n}" ${q.answer === n ? 'selected' : ''}>${n}번</option>`).join('')}
+      </select>
+    </div>
+    <div class="fld"><label>해설</label><textarea id="e_exp" rows="3">${esc(q.exp)}</textarea></div>
+    <div class="fld"><label>📷 해설 이미지</label><div id="eimgbox"></div></div>
+    <div class="fld"><label>검토메모</label><input id="e_review" value="${attr(q.review || '')}"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sec" onclick="closeM()">취소</button>
+      <button class="btn" onclick="saveQ(${targetId})">저장</button>
+    </div>`;
+    
+  paintImgBox('qimg');
+  paintImgBox('eimg');
+  $('#modal').classList.add('on');
+}
+
+function paintImgBox(key){
+  const box = $('#' + key + 'box');
+  if(!box) return;
+  const has = editBuf[key];
+  box.className = 'imgbox';
+  box.innerHTML = `${has ? `<img src="${has}">` : '<div class="muted" style="margin-bottom:8px">📎 첨부된 이미지 없음 — 아래 버튼으로 선택</div>'}
+    <input type="file" accept="image/*" onchange="loadImg(this,'${key}')">
+    ${has ? `<button class="btn sm dang" style="margin-top:8px" onclick="clearImg('${key}')">이미지 삭제</button>` : ''}`;
+}
+
+function loadImg(input,key){const f=input.files[0];if(!f)return;
+  if(f.size>2*1024*1024){if(!confirm('이미지가 2MB를 넘습니다. 계속할까요?')){input.value='';return;}}
+  const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{
+    const c=document.createElement('canvas');let w=img.width,h=img.height;const M=900;
+    if(w>M){h=Math.round(h*M/w);w=M;}c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    editBuf[key]=c.toDataURL('image/jpeg',0.85);paintImgBox(key);
+  };img.src=e.target.result;};r.readAsDataURL(f);}
+function clearImg(key){editBuf[key]='';paintImgBox(key);}
+
+function saveQ(id){
+  const g = s => {
+    const el = $('#' + s);
+    return el ? el.value : '';
+  };
+  
+  const obj = {
+    u1: g('e_u1'),
+    u2: g('e_u2'),
+    freq: +g('e_freq'),
+    region: g('e_region'),
+    year: g('e_year'),
+    q: g('e_q'),
+    choices: [g('e_c0'), g('e_c1'), g('e_c2'), g('e_c3')],
+    answer: +g('e_ans'),
+    exp: g('e_exp'),
+    review: g('e_review'),
+    qimg: editBuf.qimg || '',
+    eimg: editBuf.eimg || ''
+  };
+
+  if(id !== null && id !== undefined){
+    const idx = DB.findIndex(x => x.id === id);
+    if(idx !== -1) Object.assign(DB[idx], obj);
+  } else {
+    obj.id = DB.length ? Math.max(...DB.map(x => x.id)) + 1 : 1;
+    DB.push(obj);
+  }
+  
+  saveDB();
+  closeM();
+  renderManage();
+}
+
+// ===== 문제추가 =====
+const SAMPLE=`@대단원: 01 자동차 일반
+@중단원: 01 자동차의 정의 및 분류
+03
+출제빈도 ★★★
+2013. 부산
+4실린더 엔진의 실린더 직경이 100mm, 행정이 80mm인 자동차의 총배기량은?
+① 628cc
+② 1,004cc
+③ 2,512cc
+④ 10,048cc
+정답: 3
+해설: 총배기량 = πr²×L×N = 3.14×(5cm)²×8cm×4 = 2,512cc
+###
+2014,2016. 교육청·서울
+다음 중 섀시에 포함되지 않는 것은?
+① 전기장치
+② 조향장치
+③ 엔진
+④ 차체(바디)
+정답: 4
+해설: 차체를 제외한 상태가 섀시이다.`;
+
+function renderAdd(){if(ROLE!=='admin'){$('#view').innerHTML='<div class="card">접근 권한이 없습니다.</div>';return;}
+  $('#view').innerHTML=`
+  <div class="card"><h3>➕ PDF 형식으로 문제 일괄 추가</h3>
+    <p class="muted" style="margin:6px 0 10px">PDF(또는 한글) 문제를 아래 형식에 맞춰 붙여넣으면 한 번에 여러 문제가 추가됩니다. <b>### 로 문제를 구분</b>합니다.</p>
+    <div class="code">@대단원: 01 자동차 일반        ← (선택) 이후 문제 공통 적용
+@중단원: 01 자동차의 정의 및 분류  ← (선택)
+01                              ← (선택) 문제번호·"출제빈도" 줄은 자동 무시
+출제빈도 ★★★                   ← ★ 개수로 빈도 자동 인식
+2014,2016. 교육청·서울          ← 연도. 지역 (각각 분리 적용됨)
+여기에 문제 본문...
+① 선택지1
+② 선택지2
+③ 선택지3
+④ 선택지4
+정답: 4
+해설: 해설 내용 (여러 줄 가능)
+###                             ← 다음 문제 구분선</div>
+    <div class="row" style="margin:10px 0 6px"><button class="btn sm sec" onclick="document.getElementById('paste').value=SAMPLE;previewParse()">예시 채우기</button><span class="muted">①②③④ 또는 1) 2) 모두 인식</span></div>
+    <textarea id="paste" rows="12" placeholder="여기에 PDF에서 복사한 문제를 붙여넣으세요..." oninput="previewParse()"></textarea>
+    <div id="prev" style="margin-top:10px"></div>
+    <button class="btn full ok" style="margin-top:10px" onclick="commitAdd()">파싱된 문제 추가하기</button>
+  </div>
+  <div class="note">📌 묶인 지역·연도는 자동으로 각각 분리 적용됩니다. 이미지가 필요한 문제는 추가 후 문제관리에서 ✏수정으로 첨부하세요.</div>`;}
+
+let parsedCache=[];
+function parseBlocks(text){
+  const lines=text.split('\n');let gU1='01 자동차 일반',gU2='';
+  const blocks=[];let cur=[];
+  for(let raw of lines){const line=raw.trim();
+    if(line.startsWith('@대단원:')){gU1=line.replace('@대단원:','').trim();continue;}
+    if(line.startsWith('@중단원:')){gU2=line.replace('@중단원:','').trim();continue;}
+    if(line==='###'){if(cur.length){blocks.push(cur);cur=[];}continue;}
+    cur.push(raw);}
+  if(cur.length)blocks.push(cur);
+  const out=[];for(const b of blocks){const q=parseOne(b,gU1,gU2);if(q)out.push(q);}return out;}
+
+function parseOne(blockLines,gU1,gU2){
+  let freq=2,region='',year='',qtext=[],choices=[],answer=1,exp=[],u1=gU1,u2=gU2,mode='head';
+  const cmap={'①':1,'②':2,'③':3,'④':4};
+  for(let raw of blockLines){let line=raw.trim();if(!line)continue;
+    if(line.startsWith('@대단원:')){u1=line.replace('@대단원:','').trim();continue;}
+    if(line.startsWith('@중단원:')){u2=line.replace('@중단원:','').trim();continue;}
+    if(/출제빈도|통제빈도|둘째반도|돌파비드/.test(line)||/^[★☆]+$/.test(line)){
+      const s=(line.match(/★/g)||[]).length;if(s)freq=s;continue;}
+    if(/^\d{1,3}$/.test(line))continue;
+    let ym=line.match(/^(20\d{2}[\d,\s·]*)[.\,]\s*(.+)$/);
+    if(ym&&mode==='head'){year=ym[1].replace(/\s/g,'');region=ym[2].replace(/[\[\(].*?[\]\)]/g,'').trim();continue;}
+    let am=line.match(/^정답\s*[:：]\s*([①②③④1-4])/);
+    if(am){const c=am[1];answer=cmap[c]||parseInt(c);mode='exp';continue;}
+    if(/^해설\s*[:：]/.test(line)){exp.push(line.replace(/^해설\s*[:：]\s*/,''));mode='exp';continue;}
+    let cm=line.match(/^([①②③④])\s*(.*)$/)||line.match(/^([1-4])[\)\.]\s*(.*)$/);
+    if(cm){choices.push(cm[2]);mode='choice';continue;}
+    if(mode==='exp')exp.push(line);else{qtext.push(line);mode='head';}}
+  if(!qtext.length||choices.length<2)return null;
+  while(choices.length<4)choices.push('');
+  return {u1,u2,freq,region,year,q:qtext.join('\n'),choices:choices.slice(0,4),answer,exp:exp.join('\n'),review:'',qimg:'',eimg:''};}
+
+function previewParse(){const t=$('#paste').value;parsedCache=parseBlocks(t);
+  const el=$('#prev');if(!el)return;
+  if(!parsedCache.length){el.innerHTML='<div class="muted">인식된 문제 없음</div>';return;}
+  el.innerHTML=`<div style="font-weight:700;margin-bottom:6px">✅ 인식된 문제: ${parsedCache.length}개</div>`+
+    parsedCache.map(q=>`<div class="card" style="margin-bottom:8px;padding:10px">
+      <div class="qmeta tags"><span class="stars">${STAR(q.freq)}</span> ${splitRegions(q.region).map(r=>`<span class="pill o">${esc(r)}</span>`).join('')||'<span class="pill o">지역?</span>'} ${splitYears(q.year).map(y=>`<span class="pill p">${y}</span>`).join('')||'<span class="pill p">연도?</span>'}</div>
+      <div style="font-size:13px;font-weight:600;white-space:pre-wrap">${esc(q.q)}</div>
+      <div class="muted" style="font-size:12px">정답 ${q.answer}. ${esc(q.choices[q.answer-1]||'')}</div></div>`).join('');}
+
+function commitAdd(){if(!parsedCache.length){alert('추가할 문제가 없습니다. 형식을 확인하세요.');return;}
+  if(!confirm(`${parsedCache.length}개 문제를 추가할까요?`))return;
+  let nid=Math.max(0,...DB.map(x=>x.id));
+  parsedCache.forEach(q=>{q.id=++nid;DB.push(q);});
+  saveDB();alert(`${parsedCache.length}개 추가됨. (총 ${DB.length}문항)`);TAB='manage';renderNav();render();}
+
+function renderStats(){if(!HIST.length){$('#view').innerHTML='<div class="card center muted">아직 응시 기록이 없습니다.<br>시험에 응시하면 통계가 표시됩니다.</div>';return;}
+  const scores=HIST.map(h=>h.score);const myAvg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const best=Math.max(...scores);const last=HIST[0];
+  const pr=peers(last.setKey).concat([last.score]).sort((a,b)=>b-a);
+  const avg=Math.round(pr.reduce((a,b)=>a+b,0)/pr.length);const rank=pr.indexOf(last.score)+1;
+  const byUnit={};HIST.forEach(h=>h.detail.forEach(d=>{const q=DB.find(x=>x.id===d.id);if(!q)return;const k=q.u2;byUnit[k]=byUnit[k]||{c:0,t:0};byUnit[k].t++;if(d.correct)byUnit[k].c++;}));
+  $('#view').innerHTML=`
+  <div class="card"><h3>📊 최근 시험 경쟁 현황</h3>
+    <div class="stat-grid" style="margin-top:10px">
+      <div class="stat-box"><div class="v">${pr.length}명</div><div class="l">응시 인원</div></div>
+      <div class="stat-box"><div class="v">${avg}점</div><div class="l">평균 점수</div></div>
+      <div class="stat-box"><div class="v">${rank}위</div><div class="l">나의 순위</div></div>
+      <div class="stat-box"><div class="v">${last.score}점</div><div class="l">나의 점수</div></div></div></div>
+  <div class="card"><h3>🏆 나의 성적</h3>
+    <div class="row" style="margin:8px 0"><span class="muted">평균 점수</span><b>${myAvg}점</b></div>
+    <div class="row" style="margin:8px 0"><span class="muted">최고 점수</span><b style="color:var(--ok)">${best}점</b></div>
+    <div class="row" style="margin:8px 0"><span class="muted">총 응시 횟수</span><b>${HIST.length}회</b></div></div>
+  <div class="card"><h3>📚 중단원별 정답률</h3>
+    ${Object.entries(byUnit).map(([k,v])=>{const p=Math.round(v.c/v.t*100);return `
+      <div style="margin:10px 0"><div class="row"><span style="font-size:13px">${k}</span><b>${p}% (${v.c}/${v.t})</b></div>
+      <div class="bar"><i style="width:${p}%;background:${p>=70?'var(--ok)':p>=50?'#f59e0b':'var(--no)'}"></i></div></div>`}).join('')}</div>`;}
+
+function renderHist(){if(!HIST.length){$('#view').innerHTML='<div class="card center muted">응시 이력이 없습니다.</div>';return;}
+  $('#view').innerHTML=`
+  <div class="card"><div class="row" style="margin-bottom:10px"><h3>🗂 응시 이력 (${HIST.length}회)</h3><button class="btn sm dang" onclick="if(confirm('모든 이력을 삭제할까요?')){HIST=[];saveHist();renderHist();}">전체삭제</button></div>
+    <table><tr><th>일시</th><th>점수</th><th>정답</th><th>소요</th><th>순위</th></tr>
+      ${HIST.map(h=>{const pr=peers(h.setKey).concat([h.score]).sort((a,b)=>b-a);const rk=pr.indexOf(h.score)+1;return `
+        <tr><td style="font-size:11px">${h.date.replace(/:\d+$/,'')}</td><td><b>${h.score}</b></td><td>${h.correct}/${h.total}</td><td>${Math.floor(h.sec/60)}:${String(h.sec%60).padStart(2,'0')}</td><td>${rk}/${pr.length}</td></tr>`}).join('')}
+    </table></div>
+  <div class="note">📈 점수 추이: ${HIST.slice(0,10).reverse().map(h=>h.score).join(' → ')}</div>`;}
+
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function attr(s){return esc(s).replace(/"/g,'&quot;');}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeM();};
+renderNav();render();
+</script>
+</body>
+</html>
