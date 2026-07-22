@@ -606,7 +606,31 @@ function renderHist(){if(!HIST.length){$('#view').innerHTML='<div class="card ce
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function attr(s){return esc(s).replace(/"/g,'&quot;');}
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeM();};
-renderNav();render();
+async function loadQuestions(){
+
+    try{
+
+        const res = await fetch("question.json?v=" + Date.now());
+
+        const data = await res.json();
+
+        DB = data;
+
+        saveDB();
+
+    }catch(e){
+
+        console.log(e);
+
+    }
+
+    renderNav();
+
+    render();
+
+}
+
+loadQuestions();
 </script>
 </body>
 </html>
